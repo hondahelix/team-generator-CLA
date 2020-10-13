@@ -10,73 +10,127 @@ const outputPath = path.join(OUTPUT_DIR, "team.html");
 
 const render = require("./lib/htmlRenderer");
 
+const getId = [];
+const holdWorkers = [];
 
-// Write code to use inquirer to gather information about the development team members,
-// and to create objects for each team member (using the correct classes as blueprints!)
-class Questions{
-    constructor(userPrompt,userInput){
-        this.type = "input";
-        this.message = userPrompt;
-        this.name = userInput;
+function appMenu(){
+    function createManager(){
+        inquirer.prompt([
+            {
+                type:"input",
+                name: "managerName",
+                message: "what is your managers name?"
+            },
+            {
+                type:"input",
+                name: "managerId",
+                message: "what is your managers ID?"
+            },
+            {
+                type:"input",
+                name: "managerEmail",
+                message: "what is your managers Email?"
+            },
+            {
+                type:"input",
+                name: "managerOffice",
+                message: "what is your managers office number?"
+            }
+        ]).then(function(answers){
+            const manager = new Manager(answers.managerName, answers.managerId, answers.managerEmail, answers.managerOffice);
+            holdWorkers.push(manager);
+            getId.push(answers.managerId);
+            createTeam();
+        });
     }
-}
-const devQuestions = ["How many developmet team members are there?", "How many Managers?", "How many engineers?", "How many interns?"];
-const devInput = ["num","m","e","i"];
-const managerQuestions = ["What is the managers name?", "What is their ID?","What is their email?", "What is their office number?"];
-const engineerQuestions = ["What is the engeneers name?", "What is their ID?","What is their email?", "What is their Github username?"];
-const internQuestions = ["What is the interns name?", "What is their ID?","What is their email?", "What is their school?"];
-const employeeInput = ["name","id","email","extra"];
-var prompt = [];
-const userData = [];
-// const employeePrompt = [];
-//ask how to keep not making objects and to jsut have questions
-function makePrompt(arrayOfQuestions, arrayOfInput){
-    for(i=0; i<arrayOfQuestions.length; i++){
-        prompt.push(new Questions(arrayOfQuestions[i],arrayOfInput[i]));
+    function createTeam(){
+        inquirer.prompt([
+            {
+                type: "list",
+                name: "memberChoices",
+                message: "which type of team member would you like to add?",
+                choices: ["engineer", "intern", "no more"]
+            }
+        ]).then(function(answer){
+            switch(answer.memberChoices){
+                case "engineer":
+                    createEngneer();
+                    break;
+                case "intern":
+                    createIntern();
+                    break;
+                default:
+                    buildTeam();
+            }
+        });
     }
-}
-function employeePrompt(workers){
-    for(i =0; i<=workers.m; i++){
-        makePrompt(managerQuestions,employeeInput);
+    function createEngneer(){
+        inquirer.prompt([
+            {
+                type:"input",
+                name: "engineerName",
+                message: "what is your engineers name?"
+            },
+            {
+                type:"input",
+                name: "engineerId",
+                message: "what is your managers ID?"
+            },
+            {
+                type:"input",
+                name: "engineerEmail",
+                message: "what is your managers Email?"
+            },
+            {
+                type:"input",
+                name: "githubUsername",
+                message: "what is your engineers github username?"
+            }
+        ]).then(function(answers){
+            const engineer = new Engineer(answers.engineerName, answers.engineerId, answers.engineerEmail, answers.githubUsername);
+            holdWorkers.push(engineer);
+            getId.push(answers.engineerId);
+            createTeam();
+        });
     }
-    for(i =0; i<=workers.m; i++){
-        makePrompt(engineerQuestions,employeeInput);
-    }
-    for(i =0; i<=workers.m; i++){
-        makePrompt(internQuestions,employeeInput);
-    }
-}
-async function promptUser(){
-    try{
-        makePrompt(devQuestions,devInput);
-        const howManyEmployees = await inquirer.prompt(prompt);
-        console.log(howManyEmployees);
-        prompt =[];
-        employeePrompt(howManyEmployees);
-        //it goes throught the prompts wrigh just cant get data out
-        const workerInfo = await inquirer.prompt(prompt);
-        console.log(workerInfo);
-        prompt =[];
-    }
-    catch (err){console.log(err)};
-}
-promptUser();
-// After the user has input all employees desired, call the `render` function (required
-// above) and pass in an array containing all employee objects; the `render` function will
-// generate and return a block of HTML including templated divs for each employee!
 
-// After you have your html, you're now ready to create an HTML file using the HTML
-// returned from the `render` function. Now write it to a file named `team.html` in the
-// `output` folder. You can use the variable `outputPath` above target this location.
-// Hint: you may need to check if the `output` folder exists and create it if it
-// does not.
+    function createIntern(){
+        inquirer.prompt([
+            {
+                type:"input",
+                name: "internName",
+                message: "what is your interns name?"
+            },
+            {
+                type:"input",
+                name: "internId",
+                message: "what is your interns ID?"
+            },
+            {
+                type:"input",
+                name: "internEmail",
+                message: "what is your interns Email?"
+            },
+            {
+                type:"input",
+                name: "internSchool",
+                message: "what is your interns school?"
+            }
+        ]).then(function(answers){
+            const intern = new Intern(answers.internName, answers.internId, answers.internEmail, answers.internSchool);
+            holdWorkers.push(intern);
+            getId.push(answers.internId);
+            createTeam();
+        });
+    }
 
-// HINT: each employee type (manager, engineer, or intern) has slightly different
-// information; write your code to ask different questions via inquirer depending on
-// employee type.
-
-// HINT: make sure to build out your classes first! Remember that your Manager, Engineer,
-// and Intern classes should all extend from a class named Employee; see the directions
-// for further information. Be sure to test out each class and verify it generates an
-// object with the correct structure and methods. This structure will be crucial in order
-// for the provided `render` function to work! ```
+    function buildTeam() {
+        console.log(holdWorkers);
+        if (!fs.existsSync(OUTPUT_DIR)) {
+            fs.mkdirSync(OUTPUT_DIR)
+        }
+        fs.writeFileSync(outputPath, render(holdWorkers), "utf-8")
+    }
+    createManager();
+}
+appMenu();
