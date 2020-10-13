@@ -13,7 +13,54 @@ const render = require("./lib/htmlRenderer");
 
 // Write code to use inquirer to gather information about the development team members,
 // and to create objects for each team member (using the correct classes as blueprints!)
-
+class Questions{
+    constructor(userPrompt,userInput){
+        this.type = "input";
+        this.message = userPrompt;
+        this.name = userInput;
+    }
+}
+const devQuestions = ["How many developmet team members are there?", "How many Managers?", "How many engineers?", "How many interns?"];
+const devInput = ["num","m","e","i"];
+const managerQuestions = ["What is the managers name?", "What is their ID?","What is their email?", "What is their office number?"];
+const engineerQuestions = ["What is the engeneers name?", "What is their ID?","What is their email?", "What is their Github username?"];
+const internQuestions = ["What is the interns name?", "What is their ID?","What is their email?", "What is their school?"];
+const employeeInput = ["name","id","email","extra"];
+var prompt = [];
+const userData = [];
+// const employeePrompt = [];
+//ask how to keep not making objects and to jsut have questions
+function makePrompt(arrayOfQuestions, arrayOfInput){
+    for(i=0; i<arrayOfQuestions.length; i++){
+        prompt.push(new Questions(arrayOfQuestions[i],arrayOfInput[i]));
+    }
+}
+function employeePrompt(workers){
+    for(i =0; i<=workers.m; i++){
+        makePrompt(managerQuestions,employeeInput);
+    }
+    for(i =0; i<=workers.m; i++){
+        makePrompt(engineerQuestions,employeeInput);
+    }
+    for(i =0; i<=workers.m; i++){
+        makePrompt(internQuestions,employeeInput);
+    }
+}
+async function promptUser(){
+    try{
+        makePrompt(devQuestions,devInput);
+        const howManyEmployees = await inquirer.prompt(prompt);
+        console.log(howManyEmployees);
+        prompt =[];
+        employeePrompt(howManyEmployees);
+        //it goes throught the prompts wrigh just cant get data out
+        const workerInfo = await inquirer.prompt(prompt);
+        console.log(workerInfo);
+        prompt =[];
+    }
+    catch (err){console.log(err)};
+}
+promptUser();
 // After the user has input all employees desired, call the `render` function (required
 // above) and pass in an array containing all employee objects; the `render` function will
 // generate and return a block of HTML including templated divs for each employee!
