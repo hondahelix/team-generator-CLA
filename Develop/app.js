@@ -19,22 +19,22 @@ function appMenu(){
             {
                 type:"input",
                 name: "managerName",
-                message: "what is your managers name?"
+                message: "what is the managers name?"
             },
             {
                 type:"input",
                 name: "managerId",
-                message: "what is your managers ID?"
+                message: "what is the managers ID?"
             },
             {
                 type:"input",
                 name: "managerEmail",
-                message: "what is your managers Email?"
+                message: "what is the managers Email?"
             },
             {
                 type:"input",
                 name: "managerOffice",
-                message: "what is your managers office number?"
+                message: "what is the managers office number?"
             }
         ]).then(function(answers){
             const manager = new Manager(answers.managerName, answers.managerId, answers.managerEmail, answers.managerOffice);
@@ -69,22 +69,22 @@ function appMenu(){
             {
                 type:"input",
                 name: "engineerName",
-                message: "what is your engineers name?"
+                message: "what is the engineers name?"
             },
             {
                 type:"input",
                 name: "engineerId",
-                message: "what is your managers ID?"
+                message: "what is the engineer ID?"
             },
             {
                 type:"input",
                 name: "engineerEmail",
-                message: "what is your managers Email?"
+                message: "what is the engineer Email?"
             },
             {
                 type:"input",
                 name: "githubUsername",
-                message: "what is your engineers github username?"
+                message: "what is the engineers github username?"
             }
         ]).then(function(answers){
             const engineer = new Engineer(answers.engineerName, answers.engineerId, answers.engineerEmail, answers.githubUsername);
@@ -99,22 +99,22 @@ function appMenu(){
             {
                 type:"input",
                 name: "internName",
-                message: "what is your interns name?"
+                message: "what is the interns name?"
             },
             {
                 type:"input",
                 name: "internId",
-                message: "what is your interns ID?"
+                message: "what is the interns ID?"
             },
             {
                 type:"input",
                 name: "internEmail",
-                message: "what is your interns Email?"
+                message: "what is the interns Email?"
             },
             {
                 type:"input",
                 name: "internSchool",
-                message: "what is your interns school?"
+                message: "what is the interns school?"
             }
         ]).then(function(answers){
             const intern = new Intern(answers.internName, answers.internId, answers.internEmail, answers.internSchool);
@@ -125,7 +125,7 @@ function appMenu(){
     }
 
     function buildTeam() {
-        console.log(holdWorkers);
+        //console.log(holdWorkers);
         if (!fs.existsSync(OUTPUT_DIR)) {
             fs.mkdirSync(OUTPUT_DIR)
         }
